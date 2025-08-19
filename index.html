@@ -294,12 +294,14 @@
 
         .movie-info {
             padding: 1rem;
+            text-align: left;
         }
         
         .movie-info h3 {
             color: var(--primary-color);
             font-size: 1.2rem;
             margin-bottom: 0.5rem;
+            min-height: 50px; /* Đảm bảo các thẻ có chiều cao đều nhau */
         }
 
         .movie-info p {
@@ -505,48 +507,48 @@
             <h2 class="section-title hidden-anim">Phim Đang Chiếu</h2>
             <p class="section-subtitle hidden-anim">Đừng bỏ lỡ những bom tấn điện ảnh hấp dẫn nhất đang có mặt tại rạp.</p>
             <div class="movie-grid">
-                <!-- Movie Card 1 -->
+                <!-- Movie Card 1: Inside Out 2 -->
                 <div class="movie-card hidden-anim">
-                    <img src="https://image.tmdb.org/t/p/w500/kDp1vQkOguCWlrczSYI2b4p1uU.jpg" alt="Phim 1">
+                    <img src="https://image.tmdb.org/t/p/w500/vpnVM9B6NMmQpWeZvzLvDESb2QY.jpg" alt="Poster Inside Out 2">
                     <div class="movie-overlay">
-                        <a href="#" class="overlay-btn">Xem Chi Tiết</a>
+                        <a href="https://www.themoviedb.org/movie/1022789-inside-out-2" target="_blank" rel="noopener noreferrer" class="overlay-btn">Xem Chi Tiết</a>
                     </div>
                     <div class="movie-info">
-                        <h3>Hành Tinh Cát: Phần Hai</h3>
+                        <h3>Những Mảnh Ghép Cảm Xúc 2</h3>
+                        <p>Hoạt hình, Gia đình, Phiêu lưu</p>
+                    </div>
+                </div>
+                <!-- Movie Card 2: Furiosa -->
+                <div class="movie-card hidden-anim" style="transition-delay: 100ms;">
+                    <img src="https://image.tmdb.org/t/p/w500/iADOJ8Zymht2JPMoy3R7xceZprc.jpg" alt="Poster Furiosa">
+                     <div class="movie-overlay">
+                        <a href="https://www.themoviedb.org/movie/786892-furiosa-a-mad-max-saga" target="_blank" rel="noopener noreferrer" class="overlay-btn">Xem Chi Tiết</a>
+                    </div>
+                    <div class="movie-info">
+                        <h3>Furiosa: Câu Chuyện Từ Max Điên</h3>
                         <p>Hành động, Phiêu lưu, Khoa học viễn tưởng</p>
                     </div>
                 </div>
-                <!-- Movie Card 2 -->
-                <div class="movie-card hidden-anim" style="transition-delay: 100ms;">
-                    <img src="https://image.tmdb.org/t/p/w500/AacSm_g0g3EwT5tKPhnL0K1alpl.jpg" alt="Phim 2">
-                     <div class="movie-overlay">
-                        <a href="#" class="overlay-btn">Xem Chi Tiết</a>
-                    </div>
-                    <div class="movie-info">
-                        <h3>Kẻ Trộm Mặt Trăng 4</h3>
-                        <p>Hoạt hình, Hài, Gia đình</p>
-                    </div>
-                </div>
-                <!-- Movie Card 3 -->
+                <!-- Movie Card 3: Kingdom of the Planet of the Apes -->
                 <div class="movie-card hidden-anim" style="transition-delay: 200ms;">
-                    <img src="https://image.tmdb.org/t/p/w500/eJjBAgbCe06Z2Bv5n2B5aV2cWTo.jpg" alt="Phim 3">
+                    <img src="https://image.tmdb.org/t/p/w500/gKkl37BQuKTanygYQG1pyYgLVgf.jpg" alt="Poster Kingdom of the Planet of the Apes">
                      <div class="movie-overlay">
-                        <a href="#" class="overlay-btn">Xem Chi Tiết</a>
+                        <a href="https://www.themoviedb.org/movie/653346-kingdom-of-the-planet-of-the-apes" target="_blank" rel="noopener noreferrer" class="overlay-btn">Xem Chi Tiết</a>
                     </div>
                     <div class="movie-info">
-                        <h3>Godzilla x Kong: Đế Chế Mới</h3>
-                        <p>Hành động, Khoa học viễn tưởng</p>
+                        <h3>Hành Tinh Khỉ: Vương Quốc Mới</h3>
+                        <p>Khoa học viễn tưởng, Phiêu lưu, Hành động</p>
                     </div>
                 </div>
-                <!-- Movie Card 4 -->
+                <!-- Movie Card 4: Garfield -->
                 <div class="movie-card hidden-anim" style="transition-delay: 300ms;">
-                    <img src="https://image.tmdb.org/t/p/w500/sh7Ci5fjY0W3a0o5Z3uL1VdY9xI.jpg" alt="Phim 4">
+                    <img src="https://image.tmdb.org/t/p/w500/zK2sFxZGDnVtADplHhZN25Sj7vC.jpg" alt="Poster Garfield">
                      <div class="movie-overlay">
-                        <a href="#" class="overlay-btn">Xem Chi Tiết</a>
+                        <a href="https://www.themoviedb.org/movie/519182-the-garfield-movie" target="_blank" rel="noopener noreferrer" class="overlay-btn">Xem Chi Tiết</a>
                     </div>
                     <div class="movie-info">
-                        <h3>Kung Fu Panda 4</h3>
-                        <p>Hoạt hình, Hành động, Hài</p>
+                        <h3>Garfield: Mèo Béo Siêu Quậy</h3>
+                        <p>Hoạt hình, Hài, Gia đình</p>
                     </div>
                 </div>
             </div>
@@ -596,7 +598,7 @@
             <div class="promo-card hidden-anim">
                 <h3>Thứ Ba Vui Vẻ - Đồng Giá 50.000đ</h3>
                 <p>Tận hưởng giá vé cực sốc cho tất cả các suất chiếu 2D vào mỗi thứ Ba hàng tuần. (Không áp dụng ngày lễ, Tết).</p>
-                <a href="#" class="btn" style="margin-top:1rem;">Xem Chi Tiết</a>
+                <a href="#contact" class="btn" style="margin-top:1rem;">Liên Hệ Đặt Vé</a>
             </div>
         </section>
 
@@ -616,14 +618,13 @@
     <!-- FOOTER -->
     <footer>
         <div class="social-links">
-            <!-- Thêm link mạng xã hội của bạn vào đây -->
-            <a href="#" title="Facebook">FB</a>
-            <a href="#" title="Instagram">IG</a>
-            <a href="#" title="Tiktok">TT</a>
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" title="Facebook">FB</a>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" title="Instagram">IG</a>
+            <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" title="Tiktok">TT</a>
         </div>
         <div class="footer-nav">
             <a href="#hero">Trang Chủ</a>
-            <a href="#">Lịch Chiếu</a>
+            <a href="#movies">Lịch Chiếu</a>
             <a href="#">Tuyển Dụng</a>
             <a href="#">Điều Khoản</a>
         </div>
@@ -656,10 +657,6 @@
                     if (entry.isIntersecting) {
                         entry.target.classList.add('show-anim');
                     } 
-                    // Bỏ dòng else này nếu bạn muốn hiệu ứng chỉ xảy ra 1 lần
-                    // else {
-                    //     entry.target.classList.remove('show-anim');
-                    // }
                 });
             }, {
                 threshold: 0.1 // Kích hoạt khi 10% phần tử hiện ra
