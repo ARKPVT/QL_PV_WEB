@@ -1,669 +1,352 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Starlight Cinema - Trải Nghiệm Điện Ảnh Đỉnh Cao</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;700&display=swap" rel="stylesheet">
-    
-    <style>
-        /* --- BIẾN MÀU VÀ CÀI ĐẶT CHUNG --- */
-        :root {
-            --primary-color: #FFD700; /* Vàng Gold */
-            --secondary-color: #f0f0f0; /* Trắng xám */
-            --background-color: #0c0c1e; /* Xanh đen đậm */
-            --darker-bg-color: #080814;
-            --text-color: #e0e0e0;
-            --glow-color: #ffc400;
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CineGo — Đặt vé rạp chiếu phim nhanh</title>
+  <meta name="description" content="CineGo là ứng dụng đặt vé rạp chiếu phim nhanh, chọn ghế trực quan, lưu vé và nhận ưu đãi thành viên.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+.features-section {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+  background: #111; /* nền đen huyền */
+  padding: 50px 20px;
+  text-align: center;
+  border-radius: 20px;
+  margin-top: 50px;
+}
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+.feature {
+  background: linear-gradient(135deg, #3a0ca3, #7209b7); /* tím đậm + tím sáng */
+  color: #fff;
+  padding: 25px;
+  border-radius: 15px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
 
-        html {
-            scroll-behavior: smooth;
-        }
+.feature:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 20px rgba(114,9,183,0.5);
+}
 
-        body {
-            font-family: 'Be Vietnam Pro', sans-serif;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
+.icon {
+  font-size: 2.8rem;
+  margin-bottom: 15px;
+  animation: pulse 2s infinite;
+}
 
-        /* --- HIỆU ỨNG LOADING MỞ ĐẦU --- */
-        .loader-wrapper {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--background-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.75s ease, visibility 0.75s ease;
-        }
+.feature p {
+  font-size: 1.1rem;
+  font-weight: 500;
+}
 
-        .loader-wrapper.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
+/* Animation icon nhấp nháy */
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.2); opacity: 0.8; }
+}
 
-        .loader {
-            border: 8px solid #f3f3f3;
-            border-radius: 50%;
-            border-top: 8px solid var(--primary-color);
-            width: 80px;
-            height: 80px;
-            animation: spin 1.5s linear infinite;
-        }
+/* Responsive */
+@media (max-width: 768px) {
+  .features-section {
+    grid-template-columns: 1fr 1fr;
+  }
+}
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* --- HEADER & NAVIGATION --- */
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            padding: 1rem 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 1000;
-            transition: background-color 0.4s ease, padding 0.4s ease;
-        }
-
-        header.scrolled {
-            background-color: rgba(12, 12, 30, 0.85);
-            backdrop-filter: blur(10px);
-            padding: 0.75rem 5%;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            text-decoration: none;
-        }
-
-        nav ul {
-            list-style: none;
-            display: flex;
-        }
-
-        nav ul li {
-            margin-left: 2rem;
-        }
-
-        nav ul li a {
-            color: var(--secondary-color);
-            text-decoration: none;
-            font-weight: 500;
-            position: relative;
-            padding-bottom: 0.5rem;
-            transition: color 0.3s ease;
-        }
-
-        nav ul li a:hover {
-            color: var(--primary-color);
-        }
-
-        /* Hiệu ứng gạch chân khi hover menu */
-        nav ul li a::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background-color: var(--primary-color);
-            transform: scaleX(0);
-            transform-origin: right;
-            transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
-        }
-
-        nav ul li a:hover::after {
-            transform: scaleX(1);
-            transform-origin: left;
-        }
+@media (max-width: 480px) {
+  .features-section {
+    grid-template-columns: 1fr;
+  }
+}
 
 
-        /* --- CÁC SECTION CHUNG --- */
-        section {
-            padding: 100px 8%;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
 
-        .section-title {
-            font-size: 2.8rem;
-            color: var(--primary-color);
-            margin-bottom: 1rem;
-            position: relative;
-        }
-        
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 3px;
-            background-color: var(--primary-color);
-        }
+    .intro-section {
+  background: linear-gradient(135deg, #3a0ca3, #7209b7);
+  padding: 60px 20px;
+  color: #fff;
+  text-align: center;
+  margin-top: 40px;
+  border-radius: 20px;
+}
 
-        .section-subtitle {
-            font-size: 1.2rem;
-            max-width: 700px;
-            margin-bottom: 4rem;
-            color: var(--secondary-color);
-        }
+.intro-container h2 {
+  font-size: 2rem;
+  margin-bottom: 15px;
+}
 
-        /* --- HERO SECTION (BANNER CHÍNH) --- */
-        #hero {
-            background-image: linear-gradient(rgba(12, 12, 30, 0.7), rgba(12, 12, 30, 0.9)), url('https://images.unsplash.com/photo-1574267432553-4b4628081c31?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1931&q=80');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed; /* Hiệu ứng parallax đơn giản */
-            color: #fff;
-        }
+.intro-container p {
+  font-size: 1.1rem;
+  max-width: 700px;
+  margin: 0 auto 20px;
+  line-height: 1.6;
+}
 
-        #hero h1 {
-            font-size: 4rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            /* Hiệu ứng ánh sáng neon */
-            color: #fff;
-            text-shadow:
-                0 0 7px #fff,
-                0 0 10px #fff,
-                0 0 21px #fff,
-                0 0 42px var(--glow-color),
-                0 0 82px var(--glow-color),
-                0 0 92px var(--glow-color),
-                0 0 102px var(--glow-color),
-                0 0 151px var(--glow-color);
-            animation: flicker 3s infinite alternate;
-        }
-        
-        @keyframes flicker {
-            0%, 18%, 22%, 25%, 53%, 57%, 100% {
-                text-shadow:
-                    0 0 4px #fff,
-                    0 0 11px #fff,
-                    0 0 19px #fff,
-                    0 0 40px var(--glow-color),
-                    0 0 80px var(--glow-color),
-                    0 0 90px var(--glow-color),
-                    0 0 100px var(--glow-color),
-                    0 0 150px var(--glow-color);
-            }
-            20%, 24%, 55% { text-shadow: none; }
-        }
+.btn-intro {
+  padding: 12px 24px;
+  font-size: 1rem;
+  background: #ff6b6b;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
 
-        #hero p {
-            font-size: 1.5rem;
-            max-width: 800px;
-            margin-bottom: 2rem;
-        }
+.btn-intro:hover {
+  background: #ff4757;
+}
 
-        .btn {
-            display: inline-block;
-            padding: 1rem 2.5rem;
-            background-color: var(--primary-color);
-            color: var(--background-color);
-            text-decoration: none;
-            font-weight: 700;
-            border-radius: 50px;
-            transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
-            border: 2px solid var(--primary-color);
-        }
+    :root{
+      --bg-from:#0f0820;  /* tím đậm */
+      --bg-to:#090512;    /* tím rất đậm */
+      --brand:#8b5cf6;    /* primary */
+      --brand-2:#e879f9;  /* accent */
+      --text:#e9e7f7;
+      --muted:#b7b3cc;
+      --card:#161129;
+      --glass: rgba(255,255,255,.06);
+      --ring: 0 0 0 3px rgba(139,92,246,.25);
+      --radius: 18px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 600px at 70% -10%, #3b1b77 0%, transparent 60%),
+        radial-gradient(900px 500px at 20% 0%, #2b105b 0%, transparent 60%),
+        linear-gradient(180deg,var(--bg-from),var(--bg-to));
+      overflow-x:hidden;
+    }
+    /* subtle grid like the screenshot */
+    .bg-grid::before{
+      content:"";position:fixed;inset:0;pointer-events:none;opacity:.18;mix-blend:screen;
+      background:
+        linear-gradient(transparent 95%, rgba(255,255,255,.06) 96%),
+        linear-gradient(90deg, transparent 95%, rgba(255,255,255,.06) 96%);
+      background-size: 120px 120px;
+    }
 
-        .btn:hover {
-            transform: translateY(-5px);
-            background-color: var(--glow-color);
-            box-shadow: 0 10px 20px rgba(255, 215, 0, 0.2);
-        }
-        
-        /* --- HIỆU ỨNG ẨN HIỆN KHI CUỘN --- */
-        .hidden-anim {
-            opacity: 0;
-            filter: blur(5px);
-            transform: translateY(50px);
-            transition: opacity 0.8s ease-out, filter 0.8s ease-out, transform 0.8s ease-out;
-        }
+    .container{max-width:1100px;margin:0 auto;padding:24px}
 
-        .show-anim {
-            opacity: 1;
-            filter: blur(0);
-            transform: translateY(0);
-        }
+    header{padding:28px 0 8px;display:flex;justify-content:space-between;align-items:center}
+    .logo{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.4px}
+    .logo .mark{
+      width:38px;height:38px;border-radius:12px;
+      background:conic-gradient(from 130deg at 50% 50%, var(--brand), var(--brand-2), var(--brand));
+      box-shadow:0 10px 30px rgba(139,92,246,.35), inset 0 0 22px rgba(255,255,255,.22);
+    }
+    .logo span{font-size:20px}
 
-        /* --- PHIM ĐANG CHIẾU --- */
-        .movie-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            width: 100%;
-        }
+    nav a{color:var(--muted);text-decoration:none;margin:0 12px;font-weight:500}
+    nav a:hover{color:var(--text)}
 
-        .movie-card {
-            background-color: var(--darker-bg-color);
-            border-radius: 10px;
-            overflow: hidden;
-            position: relative;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            transition: transform 0.4s ease, box-shadow 0.4s ease;
-            cursor: pointer;
-        }
+    .hero{padding:44px 0 36px;text-align:center}
+    .hero h1{font-size:48px;line-height:1.1;margin:.1em auto .2em;max-width:920px;font-weight:800;letter-spacing:.3px}
+    .hero p{color:var(--muted);max-width:860px;margin:0 auto 24px;font-size:18px}
 
-        .movie-card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
-        }
+    .cta{display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:10px;padding:14px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.12);text-decoration:none;color:var(--text);font-weight:700;backdrop-filter: blur(6px);transition:.2s ease;}
+    .btn svg{width:20px;height:20px}
+    .btn.primary{background:linear-gradient(90deg,var(--brand),var(--brand-2));border-color:transparent;box-shadow:0 10px 25px rgba(139,92,246,.35)}
+    .btn.primary:hover{filter:brightness(1.05)}
+    .btn.ghost{background:var(--glass)}
+    .btn.ghost:hover{box-shadow:var(--ring)}
 
-        .movie-card img {
-            width: 100%;
-            height: 380px;
-            object-fit: cover;
-            display: block;
-            transition: filter 0.4s ease;
-        }
-        
-        .movie-card:hover img {
-            filter: brightness(0.4);
-        }
+    /* APP MOCKUP */
+    .stage{position:relative;margin:44px auto 0;max-width:1050px}
+    .stage .glow{position:absolute;inset:auto;left:50%;transform:translateX(-50%);bottom:-40px;width:70%;height:180px;filter:blur(40px);background:radial-gradient(closest-side, rgba(139,92,246,.35), transparent 70%);z-index:0}
 
-        .movie-info {
-            padding: 1rem;
-            text-align: left;
-        }
-        
-        .movie-info h3 {
-            color: var(--primary-color);
-            font-size: 1.2rem;
-            margin-bottom: 0.5rem;
-            min-height: 50px; /* Đảm bảo các thẻ có chiều cao đều nhau */
-        }
+    .window{position:relative;background:linear-gradient(180deg,#1b1535,#120d24);border:1px solid rgba(255,255,255,.09);border-radius:var(--radius);box-shadow:0 25px 80px rgba(0,0,0,.6), inset 0 0 0 1px rgba(255,255,255,.03);overflow:hidden;z-index:1}
+    .w-top{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.06);background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02))}
+    .dots{display:flex;gap:8px;margin-right:8px}
+    .dots i{width:10px;height:10px;border-radius:50%;display:block}
+    .dots i:nth-child(1){background:#ff5f56}
+    .dots i:nth-child(2){background:#ffbd2e}
+    .dots i:nth-child(3){background:#27c93f}
+    .w-title{font-weight:700;color:#d7d3eb}
 
-        .movie-info p {
-            font-size: 0.9rem;
-            color: var(--secondary-color);
-        }
-        
-        /* Hiệu ứng overlay khi hover poster */
-        .movie-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.6);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-        
-        .movie-card:hover .movie-overlay {
-            opacity: 1;
-        }
-        
-        .overlay-btn {
-            padding: 0.8rem 1.8rem;
-            border: 2px solid var(--primary-color);
-            background: transparent;
-            color: var(--primary-color);
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        
-        .overlay-btn:hover {
-            background-color: var(--primary-color);
-            color: var(--background-color);
-        }
+    .screen{display:grid;grid-template-columns:260px 1fr;min-height:520px}
+    .left{border-right:1px solid rgba(255,255,255,.06);padding:16px;background:#150f2d}
+    .metric{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0 18px}
+    .chip{background:rgba(255,255,255,.06);padding:8px 10px;border-radius:12px;font-size:12px;color:#cfcbe2;border:1px solid rgba(255,255,255,.08)}
 
-        /* --- GIỚI THIỆU --- */
-        .about-content {
-            display: flex;
-            align-items: center;
-            gap: 3rem;
-            text-align: left;
-        }
-        
-        .about-text {
-            flex: 1;
-        }
+    .menu{display:flex;flex-direction:column;gap:8px}
+    .menu a{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;text-decoration:none;color:#d3cfec;font-weight:600}
+    .menu a:hover{background:rgba(255,255,255,.06)}
 
-        .about-image {
-            flex: 1;
-        }
-        
-        .about-image img {
-            max-width: 100%;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.1);
-        }
+    .right{position:relative;padding:0;background:
+      radial-gradient(1200px 300px at 40% 0%, rgba(139,92,246,.18), transparent 60%),
+      radial-gradient(400px 300px at 80% 20%, rgba(232,121,249,.14), transparent 60%),
+      #0f0a22;
+    }
 
-        /* --- CÔNG NGHỆ RẠP CHIẾU --- */
-        .tech-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2.5rem;
-            width: 100%;
-            text-align: left;
-        }
-        
-        .tech-item {
-            background: linear-gradient(145deg, #10102a, #0a0a1a);
-            padding: 2rem;
-            border-radius: 10px;
-            border-left: 4px solid var(--primary-color);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        
-        .tech-item:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-        }
+    /* pseudo content inside screen */
+    .carousel{display:flex;gap:14px;overflow:auto;padding:18px}
+    .poster{flex:0 0 260px;height:340px;border-radius:16px;background:linear-gradient(160deg,#2a1b56,#5b2b8f);border:1px solid rgba(255,255,255,.08);box-shadow:0 15px 35px rgba(0,0,0,.25);position:relative}
+    .poster:after{content:"Poster";position:absolute;bottom:12px;left:12px;font-weight:800;letter-spacing:.4px;color:#ffffffaa}
 
-        .tech-item .icon {
-            font-size: 3rem;
-            color: var(--primary-color);
-            margin-bottom: 1rem;
-        }
-        
-        .tech-item h3 {
-            font-size: 1.5rem;
-            color: var(--secondary-color);
-            margin-bottom: 0.5rem;
-        }
-        
-        /* --- ƯU ĐÃI ĐẶC BIỆT --- */
-        #promotions {
-             background-color: var(--darker-bg-color);
-        }
+    .row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:0 18px 22px}
+    .card{height:160px;border-radius:14px;background:linear-gradient(140deg,#1c123b,#29184f);border:1px solid rgba(255,255,255,.08);position:relative}
+    .card:after{content:"Suất chiếu";position:absolute;bottom:10px;left:12px;color:#cfcbe2;font-weight:700}
 
-        .promo-card {
-            background-color: var(--background-color);
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
+    /* FEATURES */
+    .features{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:54px auto 24px}
+    .feat{background:linear-gradient(180deg,#1a1432,#130f29);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);padding:18px;box-shadow:0 12px 30px rgba(0,0,0,.35)}
+    .feat h3{margin:6px 0 6px;font-size:18px}
+    .feat p{color:var(--muted);margin:0}
 
-        /* --- LIÊN HỆ --- */
-        .contact-info {
-            background: var(--darker-bg-color);
-            padding: 3rem;
-            border-radius: 15px;
-            width: 100%;
-            max-width: 800px;
-        }
+    footer{opacity:.75;text-align:center;padding:32px 0 54px;color:#bdb8d4}
 
-        .contact-info p {
-            font-size: 1.1rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .contact-info strong {
-            color: var(--primary-color);
-        }
+    @media (max-width: 1040px){
+      .screen{grid-template-columns:1fr}
+      .left{border-right:0;border-bottom:1px solid rgba(255,255,255,.06)}
+      .row{grid-template-columns:repeat(2,1fr)}
+    }
+    @media (max-width: 740px){
+      .hero h1{font-size:34px}
+      .features{grid-template-columns:1fr}
+    }
 
-        /* --- FOOTER --- */
-        footer {
-            background-color: var(--darker-bg-color);
-            text-align: center;
-            padding: 2rem 5%;
-            color: var(--secondary-color);
-        }
-
-        .social-links a {
-            color: var(--secondary-color);
-            font-size: 1.5rem;
-            margin: 0 0.75rem;
-            transition: color 0.3s;
-        }
-        
-        .social-links a:hover {
-            color: var(--primary-color);
-        }
-        
-        .footer-nav {
-            margin: 1.5rem 0;
-        }
-
-        .footer-nav a {
-            color: var(--secondary-color);
-            text-decoration: none;
-            margin: 0 1rem;
-            transition: color 0.3s;
-        }
-        
-        .footer-nav a:hover {
-            color: var(--primary-color);
-        }
-        
-        .copyright {
-            margin-top: 1rem;
-            font-size: 0.9rem;
-            opacity: 0.7;
-        }
-
-    </style>
+    .fade-in{opacity:0;transform:translateY(16px);transition:opacity .6s ease, transform .6s ease}
+    .fade-in.in{opacity:1;transform:none}
+  </style>
 </head>
 <body>
-
-    <!-- HIỆU ỨNG LOADING MỞ ĐẦU -->
-    <div class="loader-wrapper">
-        <div class="loader"></div>
-    </div>
-
-    <!-- HEADER & NAVIGATION -->
-    <header id="main-header">
-        <a href="#hero" class="logo">Starlight</a>
-        <nav>
-            <ul>
-                <li><a href="#movies">Phim Đang Chiếu</a></li>
-                <li><a href="#about">Giới Thiệu</a></li>
-                <li><a href="#technology">Công Nghệ</a></li>
-                <li><a href="#promotions">Ưu Đãi</a></li>
-                <li><a href="#contact">Liên Hệ</a></li>
-            </ul>
-        </nav>
+  <div class="scroll-animation"></div>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="container">
+    <header>
+      <div class="logo"><div class="mark" aria-hidden="true"></div><span>CineGo</span></div>
+      <nav>
+        <a href="#tinh-nang">Tính năng</a>
+        <a href="#tai">Tải app</a>
+        <a href="#hoi-dap">Hỏi đáp</a>
+      </nav>
     </header>
 
-    <main>
-        <!-- HERO SECTION -->
-        <section id="hero">
-            <h1>Ánh Sáng, Màn Bạc & Những Giấc Mơ</h1>
-            <p>Trải nghiệm điện ảnh đỉnh cao với công nghệ hiện đại và dịch vụ đẳng cấp tại Starlight Cinema.</p>
-            <a href="#movies" class="btn">Mua Vé Ngay</a>
-        </section>
+    <section class="hero fade-in">
+      <h1>Xem lịch, đặt vé & chọn ghế <span style="background:linear-gradient(90deg,var(--brand),var(--brand-2));-webkit-background-clip:text;background-clip:text;color:transparent">nhanh như chớp</span></h1>
+      <p>CineGo biến máy của bạn thành chiếc vé xem phim bỏ túi: duyệt suất chiếu ở mọi rạp, chọn ghế trực quan, thanh toán an toàn và tích điểm nhận ưu đãi thành viên.</p>
+      <div class="cta">
+        <a class="btn primary" id="tai" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M5 21h14"/></svg> Tải CineGo</a>
+        <a class="btn ghost" href="#"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 18a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12ZM8.5 9.5c.828 0 1.5-.672 1.5-1.5S9.328 6.5 8.5 6.5 7 7.172 7 8s.672 1.5 1.5 1.5Zm7 8.5a7 7 0 0 0-14 0h14Z"/></svg> Cộng đồng</a>
+      </div>
+    </section>
 
-        <!-- PHIM ĐANG CHIẾU -->
-        <section id="movies">
-            <h2 class="section-title hidden-anim">Phim Đang Chiếu</h2>
-            <p class="section-subtitle hidden-anim">Đừng bỏ lỡ những bom tấn điện ảnh hấp dẫn nhất đang có mặt tại rạp.</p>
-            <div class="movie-grid">
-                <!-- Movie Card 1: Inside Out 2 -->
-                <div class="movie-card hidden-anim">
-                    <img src="https://image.tmdb.org/t/p/w500/vpnVM9B6NMmQpWeZvzLvDESb2QY.jpg" alt="Poster Inside Out 2">
-                    <div class="movie-overlay">
-                        <a href="https://www.themoviedb.org/movie/1022789-inside-out-2" target="_blank" rel="noopener noreferrer" class="overlay-btn">Xem Chi Tiết</a>
-                    </div>
-                    <div class="movie-info">
-                        <h3>Những Mảnh Ghép Cảm Xúc 2</h3>
-                        <p>Hoạt hình, Gia đình, Phiêu lưu</p>
-                    </div>
-                </div>
-                <!-- Movie Card 2: Furiosa -->
-                <div class="movie-card hidden-anim" style="transition-delay: 100ms;">
-                    <img src="https://image.tmdb.org/t/p/w500/iADOJ8Zymht2JPMoy3R7xceZprc.jpg" alt="Poster Furiosa">
-                     <div class="movie-overlay">
-                        <a href="https://www.themoviedb.org/movie/786892-furiosa-a-mad-max-saga" target="_blank" rel="noopener noreferrer" class="overlay-btn">Xem Chi Tiết</a>
-                    </div>
-                    <div class="movie-info">
-                        <h3>Furiosa: Câu Chuyện Từ Max Điên</h3>
-                        <p>Hành động, Phiêu lưu, Khoa học viễn tưởng</p>
-                    </div>
-                </div>
-                <!-- Movie Card 3: Kingdom of the Planet of the Apes -->
-                <div class="movie-card hidden-anim" style="transition-delay: 200ms;">
-                    <img src="https://image.tmdb.org/t/p/w500/gKkl37BQuKTanygYQG1pyYgLVgf.jpg" alt="Poster Kingdom of the Planet of the Apes">
-                     <div class="movie-overlay">
-                        <a href="https://www.themoviedb.org/movie/653346-kingdom-of-the-planet-of-the-apes" target="_blank" rel="noopener noreferrer" class="overlay-btn">Xem Chi Tiết</a>
-                    </div>
-                    <div class="movie-info">
-                        <h3>Hành Tinh Khỉ: Vương Quốc Mới</h3>
-                        <p>Khoa học viễn tưởng, Phiêu lưu, Hành động</p>
-                    </div>
-                </div>
-                <!-- Movie Card 4: Garfield -->
-                <div class="movie-card hidden-anim" style="transition-delay: 300ms;">
-                    <img src="https://image.tmdb.org/t/p/w500/zK2sFxZGDnVtADplHhZN25Sj7vC.jpg" alt="Poster Garfield">
-                     <div class="movie-overlay">
-                        <a href="https://www.themoviedb.org/movie/519182-the-garfield-movie" target="_blank" rel="noopener noreferrer" class="overlay-btn">Xem Chi Tiết</a>
-                    </div>
-                    <div class="movie-info">
-                        <h3>Garfield: Mèo Béo Siêu Quậy</h3>
-                        <p>Hoạt hình, Hài, Gia đình</p>
-                    </div>
-                </div>
+    <section class="stage fade-in" aria-label="Ảnh chụp màn hình ứng dụng">
+      <div class="glow" aria-hidden="true"></div>
+      <div class="window">
+        <div class="w-top"><div class="dots" aria-hidden="true"><i></i><i></i><i></i></div><div class="w-title">CineGo • Ứng dụng đặt vé</div></div>
+        <div class="screen">
+          <aside class="left">
+            <div class="metric">
+              <div class="chip">Rạp đối tác: 200+</div>
+              <div class="chip">Suất chiếu: 5.000+</div>
+              <div class="chip">Ưu đãi: 1.000+</div>
+              <div class="chip">Người dùng: 1,3M+</div>
             </div>
-        </section>
-
-        <!-- GIỚI THIỆU RẠP -->
-        <section id="about">
-            <div class="about-content">
-                <div class="about-image hidden-anim">
-                     <img src="https://images.unsplash.com/photo-1616512658413-a36173385736?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1032&q=80" alt="Bên trong rạp phim">
-                </div>
-                <div class="about-text hidden-anim" style="transition-delay: 200ms;">
-                    <h2 class="section-title" style="text-align:left;">Về Starlight Cinema</h2>
-                    <p style="margin-bottom: 1rem;">Được thành lập với niềm đam mê điện ảnh bất tận, Starlight Cinema không chỉ là một rạp chiếu phim, mà là một không gian nơi những câu chuyện được kể và những cảm xúc được thăng hoa. Chúng tôi tự hào mang đến cho khán giả những trải nghiệm xem phim hoàn hảo nhất.</p>
-                    <p>Với hệ thống phòng chiếu hiện đại, màn hình cong cực đại, âm thanh vòm sống động và ghế ngồi êm ái, mỗi khoảnh khắc tại Starlight đều là một hành trình đáng nhớ. Hãy đến và cùng chúng tôi khám phá thế giới kỳ diệu của điện ảnh!</p>
-                </div>
+            <nav class="menu">
+              <a href="#">🏠 Trang chủ</a>
+              <a href="#">🎬 Phim đang chiếu</a>
+              <a href="#">📅 Lịch theo rạp</a>
+              <a href="#">🪑 Chọn ghế</a>
+              <a href="#">💳 Ví & Ưu đãi</a>
+              <a href="#">👤 Tài khoản</a>
+            </nav>
+          </aside>
+          <main class="right">
+            <div class="carousel" role="list">
+              <div class="poster" role="listitem" aria-label="Poster phim 1"></div>
+              <div class="poster" role="listitem" aria-label="Poster phim 2"></div>
+              <div class="poster" role="listitem" aria-label="Poster phim 3"></div>
+              <div class="poster" role="listitem" aria-label="Poster phim 4"></div>
             </div>
-        </section>
-
-        <!-- CÔNG NGHỆ RẠP CHIẾU -->
-        <section id="technology">
-             <h2 class="section-title hidden-anim">Công Nghệ Đỉnh Cao</h2>
-            <p class="section-subtitle hidden-anim">Chúng tôi đầu tư vào những công nghệ hàng đầu thế giới để mỗi thước phim trở nên chân thực và sống động hơn bao giờ hết.</p>
-            <div class="tech-grid">
-                <div class="tech-item hidden-anim">
-                    <div class="icon">🔊</div>
-                    <h3>Âm Thanh Dolby Atmos</h3>
-                    <p>Hệ thống âm thanh vòm đa chiều, đưa bạn chìm đắm vào trung tâm của hành động với âm thanh di chuyển xung quanh bạn một cách chân thực.</p>
-                </div>
-                <div class="tech-item hidden-anim" style="transition-delay: 200ms;">
-                    <div class="icon">🎬</div>
-                    <h3>Màn Chiếu Laser 4K</h3>
-                    <p>Trải nghiệm hình ảnh sắc nét gấp 4 lần Full HD, với độ tương phản vượt trội và dải màu rực rỡ, sống động đến từng chi tiết.</p>
-                </div>
-                <div class="tech-item hidden-anim" style="transition-delay: 400ms;">
-                    <div class="icon">🛋️</div>
-                    <h3>Ghế Ngồi Premium</h3>
-                    <p>Ghế da cao cấp, có thể ngả tùy chỉnh, không gian rộng rãi và thoải mái, giúp bạn tận hưởng bộ phim một cách trọn vẹn nhất.</p>
-                </div>
+            <div class="row">
+              <div class="card"></div>
+              <div class="card"></div>
+              <div class="card"></div>
+              <div class="card"></div>
             </div>
-        </section>
-        
-        <!-- ƯU ĐÃI -->
-        <section id="promotions">
-            <h2 class="section-title hidden-anim">Ưu Đãi Đặc Biệt</h2>
-            <p class="section-subtitle hidden-anim">Tiết kiệm hơn, xem phim vui hơn với các chương trình khuyến mãi hấp dẫn chỉ có tại Starlight Cinema.</p>
-            <div class="promo-card hidden-anim">
-                <h3>Thứ Ba Vui Vẻ - Đồng Giá 50.000đ</h3>
-                <p>Tận hưởng giá vé cực sốc cho tất cả các suất chiếu 2D vào mỗi thứ Ba hàng tuần. (Không áp dụng ngày lễ, Tết).</p>
-                <a href="#contact" class="btn" style="margin-top:1rem;">Liên Hệ Đặt Vé</a>
-            </div>
-        </section>
-
-        <!-- LIÊN HỆ -->
-        <section id="contact">
-            <h2 class="section-title hidden-anim">Liên Hệ & Địa Chỉ</h2>
-            <p class="section-subtitle hidden-anim">Chúng tôi luôn sẵn sàng lắng nghe và hỗ trợ bạn.</p>
-            <div class="contact-info hidden-anim">
-                <p><strong>Địa chỉ:</strong> Số 1, Đường Điện Ảnh, Quận Sáng Tạo, Thành phố Hồ Chí Minh</p>
-                <p><strong>Hotline đặt vé:</strong> 1900 1234</p>
-                <p><strong>Email:</strong> support@starlightcinema.vn</p>
-                <p><strong>Giờ mở cửa:</strong> 9:00 - 24:00 hàng ngày</p>
-            </div>
-        </section>
-    </main>
-
-    <!-- FOOTER -->
-    <footer>
-        <div class="social-links">
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" title="Facebook">FB</a>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" title="Instagram">IG</a>
-            <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" title="Tiktok">TT</a>
+          </main>
         </div>
-        <div class="footer-nav">
-            <a href="#hero">Trang Chủ</a>
-            <a href="#movies">Lịch Chiếu</a>
-            <a href="#">Tuyển Dụng</a>
-            <a href="#">Điều Khoản</a>
-        </div>
-        <p class="copyright">&copy; 2024 Starlight Cinema. All rights reserved. Designed with passion.</p>
+      </div>
+    </section>
+
+    <section class="features-section">
+  <div class="feature">
+    <div class="icon">🎬</div>
+    <p>Đặt vé trong 10 giây</p>
+  </div>
+  <div class="feature">
+    <div class="icon">🍿</div>
+    <p>Ưu đãi đặc biệt thành viên</p>
+  </div>
+  <div class="feature">
+    <div class="icon">🎥</div>
+    <p>Xem lịch chiếu mọi rạp</p>
+  </div>
+  <div class="feature">
+    <div class="icon">📱</div>
+    <p>Quản lý vé trong app</p>
+  </div>
+</section>
+
+
+    <section id="tinh-nang" class="features fade-in" aria-label="Tính năng nổi bật">
+      <article class="feat">
+        <h3>Đặt vé trong 10 giây</h3>
+        <p>Tự động đề xuất rạp gần nhất, lưu phương thức thanh toán và mã ưu đãi yêu thích.</p>
+      </article>
+      <article class="feat">
+        <h3>Chọn ghế cực trực quan</h3>
+        <p>Sơ đồ ghế rõ ràng, hỗ trợ nhóm bạn & gợi ý vị trí đẹp theo khẩu vị xem phim.</p>
+      </article>
+      <article class="feat">
+        <h3>Lợi ích thành viên</h3>
+        <p>Tích điểm, xếp hạng, nhận ưu đãi sớm cho suất chiếu đặc biệt & suất IMAX.</p>
+      </article>
+    </section>
+    <!-- Phần giới thiệu -->
+<section class="intro-section">
+  <div class="intro-container">
+    <h2>🎬 Về CineGo</h2>
+    <p>
+      CineGo là nền tảng đặt vé xem phim trực tuyến nhanh chóng và tiện lợi, 
+      giúp bạn trải nghiệm điện ảnh đỉnh cao chỉ với vài thao tác. 
+      Với hơn <b>200 rạp đối tác</b>, <b>5,000+ suất chiếu</b> mỗi ngày và <b>1.3M+ người dùng</b>, 
+      CineGo cam kết mang đến cho bạn sự lựa chọn phong phú và ưu đãi hấp dẫn nhất.
+    </p>
+    <button class="btn-intro">Khám phá ngay</button>
+  </div>
+</section>
+
+    <footer id="hoi-dap" class="fade-in">
+      © 2025 CineGo. Thiết kế bởi bạn, đóng gói bởi tình yêu điện ảnh.
     </footer>
+  </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', (event) => {
-            // --- HIỆU ỨNG LOADING ---
-            const loader = document.querySelector('.loader-wrapper');
-            window.addEventListener('load', () => {
-                loader.classList.add('hidden');
-            });
 
-            // --- HIỆU ỨNG HEADER THAY ĐỔI KHI CUỘN ---
-            const header = document.getElementById('main-header');
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 50) {
-                    header.classList.add('scrolled');
-                } else {
-                    header.classList.remove('scrolled');
-                }
-            });
 
-            // --- HIỆU ỨNG ẨN HIỆN KHI CUỘN (INTERSECTION OBSERVER) ---
-            const hiddenElements = document.querySelectorAll('.hidden-anim');
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('show-anim');
-                    } 
-                });
-            }, {
-                threshold: 0.1 // Kích hoạt khi 10% phần tử hiện ra
-            });
-
-            hiddenElements.forEach((el) => observer.observe(el));
-        });
-    </script>
+  <script>
+    // reveal on scroll & hide when out of view
+    const obs = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){
+          e.target.classList.add('in');
+        } else {
+          e.target.classList.remove('in');
+        }
+      });
+    }, {threshold: 0.1});
+    document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+  </script>
 </body>
 </html>
